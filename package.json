@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "mongoose": "^8.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "name": "store-api-node",
+  "description": "- Express SetUp\r - Connect to database\r - Controllers and Routes Setup\r - Postman Setup\r - express-async-errors\r - Schema models\r - Automating adding to database\r - Mongoose Filter Methods\r - Mongoose sort filter\r - Mongoose select filter\r - Mongoose skip and limit filter\r - Mongoose numeric filter",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
