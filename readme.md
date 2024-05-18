@@ -155,7 +155,7 @@ if(sort){
 
 //select
 if(select){
-    const selectList = sort.split(',').join(' ');
+    const selectList = select.split(',').join(' ');
     query = query.select(selectList);
 }
 const products = await query
@@ -166,21 +166,26 @@ const products = await query
 ```js
 const {featured, company, name, sort, select} = req.query
 
-const page = Number(req.params.page) || 1
-const limit = Number(req.params.limit) || 10
+const page = Number(req.query.page) || 1
+const limit = Number(req.query.limit) || 10
 
 const skip = (page -1) * limit;
 
 query = query.skip(skip).limit(limit)
+
+const products = await query
 
 ```
 
 ### Mongoose numeric filter
 ```js
 //{{URL}}/products?numericFilters=price>40,ratings>=4
-const {featured, company, name, sort, select, numerFilters} = req.query
+const {featured, company, name, sort, select, numberFilters} = req.query
+if(name){
+    queryObject.name = { $regex: name, $options:'i'} // regex setup
+}
 
-if(numerFilters){
+if(numberFilters){
     const operatorMap = {
         '>':'$gt',
         '>=':'$gte',
@@ -188,18 +193,42 @@ if(numerFilters){
         '<':'$lt',
         '<=':'$lte',
     }
-    const regEX = /\b(<|>|>=|=|<|<=)\b/g
-    let filters = numerFilters.replace(regEx, (match)=>`-${operatorMap[match]}-`);
+    const regEx = /\b(<|>|>=|=|<|<=)\b/g
+    let filters = numberFilters.replace(regEx, (match)=>`-${operatorMap[match]}-`);
     const options = ['price', 'rating'];
     filters = filters.split(',').forEach((item=>{
-        const [field, operator, value] = items.split('-')
+        const [field, operator, value] = item.split('-')
         if(options.include(field)){
             queryObject[field] = {[operator]:Number(value)}
         }
     }))
 
 }
+const products = await Product.find(queryObject);
+
+// sort, pagination, select
+// sort
+if(sort){
+    const sortList = sort.split(',').join(' ');
+    query = query.sort(sortList);
+}else{
+     query = query.sort('createAt');
+}
+
+if(select){
+    const selectList = select.split(',').join(' ');
+    query = query.select(selectList);
+}
+
+const page = Number(req.query.page) || 1
+const limit = Number(req.query.limit) || 10
+
+const skip = (page -1) * limit;
+
+query = query.skip(skip).limit(limit)
+
+const products = await query
+
+
 
 ```
-
-@TODO: check the routes and check if all the filters are working.
